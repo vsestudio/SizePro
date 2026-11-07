@@ -30,6 +30,10 @@ android {
     buildFeatures {
         compose = true
     }
+    // ADICIONADO AQUI: A versão compatível com o Kotlin 1.9.22
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8"
+    }
 }
 
 dependencies {
