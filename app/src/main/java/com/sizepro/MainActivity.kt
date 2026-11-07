@@ -1,4 +1,4 @@
-package com.seuapp.sizepro
+package com.sizepro
 
 import android.content.Context
 import android.content.Intent
@@ -37,7 +37,7 @@ import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileOutputStream
 
-// --- NOSSAS 4 CORES EXATAS ---
+// --- AS 4 CORES DO PROJETO ---
 val Azul = Color(0xFF010CFF)
 val Roxo = Color(0xFFD600FF)
 val Laranja = Color(0xFFFFA400)
@@ -56,7 +56,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// --- CONTROLO DE TELAS ---
 enum class Tela { HOME, REDIMENSIONAR }
 
 @Composable
@@ -78,7 +77,6 @@ fun SizeProApp() {
     }
 }
 
-// --- TELA 1 (HOME) ---
 @Composable
 fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
     val context = LocalContext.current
@@ -96,7 +94,6 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
     ) {
         Spacer(modifier = Modifier.height(40.dp))
         
-        // Logo
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier.size(70.dp).background(Brush.linearGradient(listOf(Roxo, Laranja)), RoundedCornerShape(20.dp)),
@@ -113,14 +110,12 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Textos
         Text("Escolha uma fotografia", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Spacer(modifier = Modifier.height(8.dp))
         Text("Selecione uma imagem JPG, PNG ou WebP", fontSize = 14.sp, color = Color.Gray, textAlign = TextAlign.Center)
         
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Botão Principal
         Box(
             modifier = Modifier
                 .fillMaxWidth().height(60.dp)
@@ -133,9 +128,8 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botão Exemplo (Apenas visual por enquanto)
         OutlinedButton(
-            onClick = { /* Carregar imagem de exemplo (Fuji) */ },
+            onClick = { /* Exemplo offline */ },
             modifier = Modifier.fillMaxWidth().height(60.dp),
             border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.linearGradient(listOf(Azul, Azul))),
             shape = RoundedCornerShape(30.dp)
@@ -147,7 +141,6 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Rodapé
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Box(modifier = Modifier.size(50.dp).background(Color(0xFF0F2E1E), CircleShape), contentAlignment = Alignment.Center) {
@@ -173,7 +166,6 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
     }
 }
 
-// --- TELA 2 e 3 (REDIMENSIONAR E RESULTADO) ---
 @Composable
 fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
     val context = LocalContext.current
@@ -185,7 +177,6 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
 
     Column(modifier = Modifier.fillMaxSize().background(FundoEscuro).padding(16.dp)) {
         
-        // TopBar
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onVoltar) {
                 Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar", tint = Color.White)
@@ -195,7 +186,6 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Imagem Preview
         Box(
             modifier = Modifier
                 .fillMaxWidth().height(200.dp)
@@ -218,13 +208,11 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Info Text
         val infoText = if (isResultado) "Result: ${larguraStr} x ${alturaStr} px" else "Original: ${larguraStr} x ${alturaStr} px"
         Text(infoText, color = if (isResultado) Verde else Color.Gray, fontSize = 14.sp, modifier = Modifier.align(Alignment.CenterHorizontally))
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Inputs Width e Height
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             OutlinedTextField(
                 value = larguraStr,
@@ -245,7 +233,6 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         if (!isResultado) {
-            // Teclado Numérico Simples e Botão Resize
             Button(
                 onClick = {
                     val novaLargura = larguraStr.toIntOrNull() ?: imagemOriginal?.width ?: 100
@@ -262,7 +249,6 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
                 Text("Resize", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
         } else {
-            // TELA 3 RESULTADO
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = {}, modifier = Modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = CardEscuro), border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.linearGradient(listOf(Verde, Verde)))) { Text("JPG", color = Verde) }
                 Button(onClick = {}, modifier = Modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = CardEscuro)) { Text("PNG", color = Color.Gray) }
@@ -273,9 +259,7 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Button(
-                    onClick = { 
-                        imagemResultado?.let { salvarECompartilhar(it, context) } 
-                    }, 
+                    onClick = { imagemResultado?.let { salvarECompartilhar(it, context) } }, 
                     modifier = Modifier.weight(1f), 
                     colors = ButtonDefaults.buttonColors(containerColor = Verde)
                 ) {
@@ -301,7 +285,6 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
     }
 }
 
-// Função auxiliar para partilhar/guardar
 fun salvarECompartilhar(bitmap: Bitmap, context: Context) {
     try {
         val cachePath = File(context.cacheDir, "images")
