@@ -21,7 +21,7 @@ jobs:
 
     # Removemos o setup-gradle e os caches para evitar os erros do GitHub
     - name: Generate Gradle Wrapper
-      run: gradle wrapper --gradle-version 8.7
+  run: gradle wrapper --gradle-version 8.7 --no-validate-url
 
     - name: Build APK
       run: ./gradlew assembleDebug --no-daemon
