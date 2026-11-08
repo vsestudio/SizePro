@@ -19,14 +19,12 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-
+    # Removemos o setup-gradle e os caches para evitar os erros do GitHub
     - name: Generate Gradle Wrapper
       run: gradle wrapper --gradle-version 8.7
 
     - name: Build APK
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
