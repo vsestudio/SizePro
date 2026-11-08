@@ -243,7 +243,8 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
         
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onVoltar) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar", tint = Color.White)
+                // CORRIGIDO AQUI PARA AutoMirrored:
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Voltar", tint = Color.White)
             }
             Text("Resize", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.weight(1f))
