@@ -24,11 +24,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -80,6 +82,8 @@ fun SizeProApp() {
 @Composable
 fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
     val context = LocalContext.current
+    
+    // Launcher para escolher imagem da galeria
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             val inputStream = context.contentResolver.openInputStream(it)
@@ -92,8 +96,9 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
         modifier = Modifier.fillMaxSize().background(FundoEscuro).padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         
+        // Logo
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier.size(70.dp).background(Brush.linearGradient(listOf(Roxo, Laranja)), RoundedCornerShape(20.dp)),
@@ -108,14 +113,55 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
             }
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Escolha uma fotografia", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        // --- CARD DA IMAGEM DE EXEMPLO (Igual à Imagem 1) ---
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .border(1.dp, Color.DarkGray, RoundedCornerShape(16.dp))
+        ) {
+            // Carrega a imagem da pasta res/drawable
+            // Se o seu ficheiro for png, mude para R.drawable.exemplo (mantenha o nome exemplo)
+            Image(
+                painter = painterResource(id = R.drawable.exemplo), 
+                contentDescription = "Exemplo Offline",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+            
+            // Etiqueta "Exemplo offline"
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp)
+                    .background(Color.Black.copy(alpha = 0.7f), RoundedCornerShape(20.dp))
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = android.R.drawable.ic_menu_gallery), 
+                        contentDescription = null, 
+                        tint = Color.White,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Exemplo offline", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text("Escolha uma fotografia", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Spacer(modifier = Modifier.height(8.dp))
         Text("Selecione uma imagem JPG, PNG ou WebP", fontSize = 14.sp, color = Color.Gray, textAlign = TextAlign.Center)
         
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
+        // Botão Escolher Imagem
         Box(
             modifier = Modifier
                 .fillMaxWidth().height(60.dp)
@@ -128,8 +174,13 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Botão Usar Imagem de Exemplo
         OutlinedButton(
-            onClick = { /* Exemplo offline */ },
+            onClick = { 
+                // Pega a imagem da pasta drawable e converte para Bitmap para podermos redimensionar
+                val bitmapExemplo = BitmapFactory.decodeResource(context.resources, R.drawable.exemplo)
+                onImagemEscolhida(bitmapExemplo)
+            },
             modifier = Modifier.fillMaxWidth().height(60.dp),
             border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.linearGradient(listOf(Azul, Azul))),
             shape = RoundedCornerShape(30.dp)
@@ -141,6 +192,7 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
 
         Spacer(modifier = Modifier.weight(1f))
 
+        // Rodapé
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Box(modifier = Modifier.size(50.dp).background(Color(0xFF0F2E1E), CircleShape), contentAlignment = Alignment.Center) {
@@ -198,7 +250,7 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
                 Image(
                     bitmap = imagemParaMostrar.asImageBitmap(),
                     contentDescription = "Preview",
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(16.dp)),
                     contentScale = ContentScale.Crop
                 )
             } else {
@@ -208,7 +260,7 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        val infoText = if (isResultado) "Result: ${larguraStr} x ${alturaStr} px" else "Original: ${larguraStr} x ${alturaStr} px"
+        val infoText = if (isResultado) "Result: ${larguraStr} x ${alturaStr} px" else "Original: ${imagemOriginal?.width} x ${imagemOriginal?.height} px"
         Text(infoText, color = if (isResultado) Verde else Color.Gray, fontSize = 14.sp, modifier = Modifier.align(Alignment.CenterHorizontally))
 
         Spacer(modifier = Modifier.height(16.dp))
