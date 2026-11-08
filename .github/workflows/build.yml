@@ -22,6 +22,20 @@ jobs:
     - name: Generate Gradle Wrapper
       run: gradle wrapper --gradle-version 8.7 --no-validate-url
 
+    # ETAPA NOVA: Tenta baixar o Gradle até 5 vezes com um pequeno intervalo
+    - name: Warm Gradle distribution
+      run: |
+        for attempt in 1 2 3 4 5; do
+          if ./gradlew --version > /dev/null 2>&1; then
+            echo "Distribuição do Gradle pronta (tentativa $attempt)."
+            exit 0
+          fi
+          echo "Falha ao baixar o Gradle (tentativa $attempt). Tentando novamente em 15 segundos..."
+          sleep 15
+        done
+        echo "::error::Não foi possível baixar o Gradle após 5 tentativas."
+        exit 1
+
     - name: Build APK
       run: ./gradlew assembleDebug --no-daemon
 
