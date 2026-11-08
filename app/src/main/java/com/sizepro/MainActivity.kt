@@ -1,9 +1,5 @@
 package com.sizepro
 
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.LockOpen
-import androidx.compose.material.icons.filled.Backspace
-import androidx.compose.material.icons.filled.SwapHoriz
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -22,6 +18,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -36,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
@@ -48,9 +46,9 @@ val Azul = Color(0xFF010CFF)
 val Roxo = Color(0xFFD600FF)
 val Laranja = Color(0xFFFFA400)
 val Verde = Color(0xFF0EFF00)
-val FundoEscuro = Color(0xFF121212)
-val CardEscuro = Color(0xFF242424)
-val TecladoBotaoFundo = Color(0xFF2C2C2C)
+val FundoEscuro = Color(0xFF0F0F11) // Cor de fundo mais profunda
+val CardEscuro = Color(0xFF1E1E24) // Cor dos cards
+val TecladoBotaoFundo = Color(0xFF2A2A32)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,9 +78,7 @@ fun SizeProApp() {
         Tela.REDIMENSIONAR -> TelaRedimensionar(
             imagemOriginal = imagemSelecionada,
             onVoltar = { telaAtual = Tela.HOME },
-            onChangeImage = { novoBitmap ->
-                imagemSelecionada = novoBitmap
-            }
+            onChangeImage = { novoBitmap -> imagemSelecionada = novoBitmap }
         )
     }
 }
@@ -109,7 +105,7 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
                 modifier = Modifier.size(70.dp).background(Brush.linearGradient(listOf(Roxo, Laranja)), RoundedCornerShape(20.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Text("SP", color = Color.White, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                Text("SP", color = Color.White, fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column {
@@ -118,14 +114,14 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .border(1.dp, Color.DarkGray, RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(24.dp))
+                .border(1.dp, Color(0xFF333333), RoundedCornerShape(24.dp))
         ) {
             Image(
                 painter = painterResource(id = R.drawable.exemplo), 
@@ -142,19 +138,14 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painter = painterResource(id = android.R.drawable.ic_menu_gallery), 
-                        contentDescription = null, 
-                        tint = Color.White,
-                        modifier = Modifier.size(16.dp)
-                    )
+                    Icon(painter = painterResource(id = android.R.drawable.ic_menu_gallery), contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(6.dp))
                     Text("Exemplo offline", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         Text("Escolha uma fotografia", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Spacer(modifier = Modifier.height(8.dp))
@@ -169,7 +160,11 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
                 .clickable { launcher.launch("image/*") },
             contentAlignment = Alignment.Center
         ) {
-            Text("Escolher imagem", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Filled.AddPhotoAlternate, contentDescription = null, tint = Color.White)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Escolher imagem", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -191,27 +186,23 @@ fun TelaHome(onImagemEscolhida: (Bitmap) -> Unit) {
         Spacer(modifier = Modifier.weight(1f))
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(modifier = Modifier.size(50.dp).background(Color(0xFF0F2E1E), CircleShape), contentAlignment = Alignment.Center) {
-                    Text("🔒", fontSize = 20.sp)
-                }
-                Text("Seguro", color = Color.Gray, fontSize = 12.sp)
-            }
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(modifier = Modifier.size(50.dp).background(Color(0xFF2E1F0F), CircleShape), contentAlignment = Alignment.Center) {
-                    Text("⚡", fontSize = 20.sp)
-                }
-                Text("Rápido", color = Color.Gray, fontSize = 12.sp)
-            }
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(modifier = Modifier.size(50.dp).background(Color(0xFF2E0F2E), CircleShape), contentAlignment = Alignment.Center) {
-                    Text("⭐", fontSize = 20.sp)
-                }
-                Text("Qualidade", color = Color.Gray, fontSize = 12.sp)
-            }
+            InfoIcon("🔒", "Seguro", Color(0xFF0F2E1E))
+            InfoIcon("⚡", "Rápido", Color(0xFF2E1F0F))
+            InfoIcon("⭐", "Qualidade", Color(0xFF2E0F2E))
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text("• A sua imagem permanece no seu dispositivo", color = Verde, fontSize = 12.sp)
+    }
+}
+
+@Composable
+fun InfoIcon(emoji: String, label: String, bgColor: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(modifier = Modifier.size(50.dp).background(bgColor, CircleShape), contentAlignment = Alignment.Center) {
+            Text(emoji, fontSize = 20.sp)
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(label, color = Color.Gray, fontSize = 12.sp)
     }
 }
 
@@ -241,37 +232,36 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
 
     Column(modifier = Modifier.fillMaxSize().background(FundoEscuro).padding(16.dp)) {
         
+        // TOP BAR
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onVoltar) {
-                // CORRIGIDO AQUI PARA AutoMirrored:
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Voltar", tint = Color.White)
             }
-            Text("Resize", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text("Resize", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = { }) {
-                Icon(Icons.Filled.MoreVert, contentDescription = "Mais", tint = Color.White)
+                Box(modifier = Modifier.size(36.dp).background(CardEscuro, RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center) {
+                    Icon(Icons.Filled.MoreVert, contentDescription = "Mais", tint = Color.White)
+                }
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
+        // IMAGE PREVIEW & CHANGE BUTTON
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .height(180.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .border(1.dp, Color.DarkGray, RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(20.dp))
+                    .border(if (isResultado) 2.dp else 1.dp, if (isResultado) Verde else Color(0xFF333333), RoundedCornerShape(20.dp))
                     .background(CardEscuro),
                 contentAlignment = Alignment.Center
             ) {
-                imagemOriginal?.let {
-                    Image(
-                        bitmap = it.asImageBitmap(),
-                        contentDescription = "Preview",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
+                val bmp = if (isResultado) imagemResultado else imagemOriginal
+                bmp?.let {
+                    Image(bitmap = it.asImageBitmap(), contentDescription = "Preview", modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                 }
             }
             Spacer(modifier = Modifier.width(12.dp))
@@ -281,72 +271,53 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.height(50.dp)
             ) {
-                Text("Change", color = Color.White)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            "Original: ${imagemOriginal?.width ?: 0} x ${imagemOriginal?.height ?: 0} px · $tamanhoKB KB",
-            color = Color.Gray, fontSize = 14.sp, modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .clip(RoundedCornerShape(12.dp))
-                    .border(if (isWidthActive) 2.dp else 1.dp, if (isWidthActive) Azul else Color.DarkGray, RoundedCornerShape(12.dp))
-                    .clickable { isWidthActive = true }
-                    .padding(12.dp)
-            ) {
-                Column {
-                    Text("Width (px)", color = Azul, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    Text(larguraStr, color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                }
-            }
-
-            IconButton(
-                onClick = { isProporcaoBloqueada = !isProporcaoBloqueada },
-                modifier = Modifier.padding(horizontal = 8.dp).size(48.dp).background(Roxo, CircleShape)
-            ) {
-                Icon(
-                    imageVector = if (isProporcaoBloqueada) Icons.Filled.Lock else Icons.Filled.LockOpen,
-                    contentDescription = "Bloquear Proporção",
-                    tint = Color.White
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .clip(RoundedCornerShape(12.dp))
-                    .border(if (!isWidthActive) 2.dp else 1.dp, if (!isWidthActive) Laranja else Color.DarkGray, RoundedCornerShape(12.dp))
-                    .clickable { isWidthActive = false }
-                    .padding(12.dp)
-            ) {
-                Column {
-                    Text("Height (px)", color = Laranja, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    Text(alturaStr, color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                }
+                Text("Change", color = Color.White, fontSize = 14.sp)
             }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        // INFO TEXT
+        Text(
+            if (isResultado) "Result: $larguraStr x $alturaStr px" else "Original: ${imagemOriginal?.width ?: 0} x ${imagemOriginal?.height ?: 0} px · $tamanhoKB KB",
+            color = if (isResultado) Verde else Color.Gray, fontSize = 14.sp, 
+            fontWeight = if (isResultado) FontWeight.Bold else FontWeight.Normal,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // INPUTS
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            InputBox("Width (px)", larguraStr, Azul, isWidthActive) { isWidthActive = true }
+            
+            IconButton(
+                onClick = { isProporcaoBloqueada = !isProporcaoBloqueada },
+                modifier = Modifier.padding(horizontal = 8.dp).size(44.dp).background(Roxo, CircleShape)
+            ) {
+                Icon(
+                    imageVector = if (isProporcaoBloqueada) Icons.Filled.Lock else Icons.Filled.LockOpen,
+                    contentDescription = "Trava",
+                    tint = Color.White
+                )
+            }
+
+            InputBox("Height (px)", alturaStr, Laranja, !isWidthActive) { isWidthActive = false }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // OUTPUT SIZE BAR
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Black, RoundedCornerShape(12.dp))
-                .border(1.dp, Color.DarkGray, RoundedCornerShape(12.dp))
-                .padding(16.dp)
+                .border(1.dp, Color(0xFF333333), RoundedCornerShape(12.dp))
+                .padding(horizontal = 16.dp, vertical = 14.dp)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Output size", color = Color.Gray, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                Text("-", color = Verde, fontSize = 18.sp, fontWeight = FontWeight.Bold) 
+                Text(if (isResultado) "New size" else "Output size", color = Color.Gray, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(if (isResultado) "$larguraStr x $alturaStr px · ~265 KB" else "—", color = Verde, fontSize = 14.sp, fontWeight = FontWeight.Bold) 
             }
         }
 
@@ -354,7 +325,7 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
 
         if (!isResultado) {
 
-                        // TECLADO CUSTOMIZADO
+                        // TECLADO CUSTOMIZADO PREMIUM
             val teclas = listOf(
                 listOf("7", "8", "9", "DEL"),
                 listOf("4", "5", "6", "CLR"),
@@ -371,8 +342,8 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
                                     texto = tecla,
                                     modifier = Modifier.weight(1f),
                                     onClick = { 
-                                        adicionarNumero("0", isWidthActive, isProporcaoBloqueada, imagemOriginal, larguraStr, alturaStr) { w, h -> 
-                                            larguraStr = w; alturaStr = h 
+                                        if (larguraStr.length < 4 || !isWidthActive) { // Limite de 4 dígitos
+                                            adicionarNumero("0", isWidthActive, isProporcaoBloqueada, imagemOriginal, larguraStr, alturaStr) { w, h -> larguraStr = w; alturaStr = h }
                                         }
                                     }
                                 )
@@ -386,11 +357,11 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
                                             isResultado = true
                                         }
                                     },
-                                    modifier = Modifier.weight(1f).height(64.dp),
+                                    modifier = Modifier.weight(1f).height(60.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = CardEscuro),
                                     shape = RoundedCornerShape(12.dp)
                                 ) {
-                                    Text("Resize", color = Color.Gray, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                                    Text("Resize", color = Color.Gray, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                                 }
                             } else {
                                 TeclaTeclado(
@@ -412,9 +383,8 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
                                                 alturaStr = temp
                                             }
                                             else -> {
-                                                adicionarNumero(tecla, isWidthActive, isProporcaoBloqueada, imagemOriginal, larguraStr, alturaStr) { w, h -> 
-                                                    larguraStr = w
-                                                    alturaStr = h
+                                                if ((isWidthActive && larguraStr.length < 4) || (!isWidthActive && alturaStr.length < 4)) { // Limite de 4 dígitos
+                                                    adicionarNumero(tecla, isWidthActive, isProporcaoBloqueada, imagemOriginal, larguraStr, alturaStr) { w, h -> larguraStr = w; alturaStr = h }
                                                 }
                                             }
                                         }
@@ -426,24 +396,89 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
                 }
             }
         } else {
-            // TELA 3: RESULTADO
-            Text("Imagem Redimensionada com Sucesso!", color = Verde, fontWeight = FontWeight.Bold)
+            // TELA 3: RESULTADO ULTRA MODERNO
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FormatButton("JPG", isSelected = true, modifier = Modifier.weight(1f))
+                FormatButton("PNG", isSelected = false, modifier = Modifier.weight(1f))
+                FormatButton("WEBP", isSelected = false, modifier = Modifier.weight(1f))
+            }
+            
             Spacer(modifier = Modifier.height(16.dp))
+
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Button(
                     onClick = { imagemResultado?.let { salvarECompartilhar(it, context) } }, 
-                    modifier = Modifier.weight(1f), 
-                    colors = ButtonDefaults.buttonColors(containerColor = Verde)
+                    modifier = Modifier.weight(1f).height(56.dp), 
+                    colors = ButtonDefaults.buttonColors(containerColor = Verde),
+                    shape = RoundedCornerShape(16.dp)
                 ) {
-                    Text("⬇ Download", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Icon(Icons.Filled.Download, contentDescription = null, tint = Color.Black)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Download", color = Color.Black, fontWeight = FontWeight.Bold)
                 }
-                OutlinedButton(onClick = {}, modifier = Modifier.weight(1f), border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.linearGradient(listOf(Verde, Verde)))) {
-                    Text("⬆ Share", color = Verde)
+                OutlinedButton(
+                    onClick = { imagemResultado?.let { salvarECompartilhar(it, context) } }, 
+                    modifier = Modifier.weight(1f).height(56.dp), 
+                    border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.linearGradient(listOf(Verde, Verde))),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Icon(Icons.Filled.Share, contentDescription = null, tint = Verde)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Share", color = Verde, fontWeight = FontWeight.Bold)
                 }
             }
+            
             Spacer(modifier = Modifier.height(16.dp))
-             Button(onClick = { isResultado = false }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(containerColor = CardEscuro)) { Text("Resize again", color = Color.White) }
+            
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Button(onClick = { isResultado = false }, modifier = Modifier.weight(1f).height(50.dp), colors = ButtonDefaults.buttonColors(containerColor = CardEscuro), shape = RoundedCornerShape(12.dp)) { 
+                    Text("Resize again", color = Color.White) 
+                }
+                Button(onClick = onVoltar, modifier = Modifier.weight(1f).height(50.dp), colors = ButtonDefaults.buttonColors(containerColor = CardEscuro), shape = RoundedCornerShape(12.dp)) { 
+                    Text("Upload another", color = Color.White) 
+                }
+            }
         }
+    }
+}
+
+@Composable
+fun InputBox(label: String, value: String, color: Color, isActive: Boolean, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .weight(1f)
+            .clip(RoundedCornerShape(12.dp))
+            .border(if (isActive) 2.dp else 1.dp, if (isActive) color else Color(0xFF333333), RoundedCornerShape(12.dp))
+            .background(if (isActive) CardEscuro else Color.Transparent)
+            .clickable { onClick() }
+            .padding(12.dp)
+    ) {
+        Column {
+            Text(label, color = color, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            Text(
+                text = value, 
+                color = Color.White, 
+                fontSize = 22.sp, 
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis // Impede que o texto quebre o layout
+            )
+        }
+    }
+}
+
+@Composable
+fun FormatButton(text: String, isSelected: Boolean, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .height(45.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(if (isSelected) Color.Transparent else CardEscuro)
+            .border(if (isSelected) 1.dp else 0.dp, if (isSelected) Verde else Color.Transparent, RoundedCornerShape(12.dp))
+            .clickable { },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text, color = if (isSelected) Verde else Color.Gray, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -451,38 +486,31 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
 fun TeclaTeclado(texto: String, modifier: Modifier = Modifier, corTexto: Color = Color.White, onClick: () -> Unit) {
     Box(
         modifier = modifier
-            .height(64.dp)
+            .height(60.dp)
             .background(TecladoBotaoFundo, RoundedCornerShape(12.dp))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        if (texto == "DEL") {
-            Icon(Icons.Filled.Backspace, contentDescription = "Apagar", tint = corTexto)
-        } else if (texto == "CLR") {
-            Icon(Icons.Filled.Delete, contentDescription = "Limpar", tint = corTexto)
-        } else if (texto == "SWAP") {
-            Icon(Icons.Filled.SwapHoriz, contentDescription = "Inverter", tint = corTexto)
-        } else {
-            Text(texto, color = corTexto, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        when (texto) {
+            "DEL" -> Icon(Icons.Filled.Backspace, contentDescription = "Apagar", tint = corTexto)
+            "CLR" -> Icon(Icons.Filled.Delete, contentDescription = "Limpar", tint = corTexto)
+            "SWAP" -> Icon(Icons.Filled.SwapHoriz, contentDescription = "Inverter", tint = corTexto)
+            else -> Text(texto, color = corTexto, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
 
-// Lógica matemática para manter a proporção!
+// Lógica matemática para manter a proporção e limitar a 4 dígitos!
 fun adicionarNumero(
-    num: String, 
-    isWidthActive: Boolean, 
-    isLocked: Boolean, 
-    imagemOriginal: Bitmap?, 
-    currentLargura: String,
-    currentAltura: String,
-    onUpdate: (String, String) -> Unit
+    num: String, isWidthActive: Boolean, isLocked: Boolean, imagemOriginal: Bitmap?, 
+    currentLargura: String, currentAltura: String, onUpdate: (String, String) -> Unit
 ) {
     val ratio = if (imagemOriginal != null && imagemOriginal.width > 0) {
         imagemOriginal.height.toFloat() / imagemOriginal.width.toFloat()
     } else 1f
 
     if (isWidthActive) {
+        if (currentLargura.length >= 4) return // BLOQUEIO DE 4 DÍGITOS
         val novaLarguraStr = if (currentLargura == "0") num else currentLargura + num
         val novaLarguraInt = novaLarguraStr.toIntOrNull() ?: 0
         
@@ -493,6 +521,7 @@ fun adicionarNumero(
             onUpdate(novaLarguraStr, currentAltura)
         }
     } else {
+        if (currentAltura.length >= 4) return // BLOQUEIO DE 4 DÍGITOS
         val novaAlturaStr = if (currentAltura == "0") num else currentAltura + num
         val novaAlturaInt = novaAlturaStr.toIntOrNull() ?: 0
         
