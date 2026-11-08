@@ -288,22 +288,22 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
         Spacer(modifier = Modifier.height(24.dp))
 
         // INPUTS
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            InputBox("Width (px)", larguraStr, Azul, isWidthActive) { isWidthActive = true }
-            
-            IconButton(
-                onClick = { isProporcaoBloqueada = !isProporcaoBloqueada },
-                modifier = Modifier.padding(horizontal = 8.dp).size(44.dp).background(Roxo, CircleShape)
-            ) {
-                Icon(
-                    imageVector = if (isProporcaoBloqueada) Icons.Filled.Lock else Icons.Filled.LockOpen,
-                    contentDescription = "Trava",
-                    tint = Color.White
-                )
-            }
+      Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+      InputBox("Width (px)", larguraStr, Azul, isWidthActive, modifier = Modifier.weight(1f)) { isWidthActive = true }
+    
+    IconButton(
+        onClick = { isProporcaoBloqueada = !isProporcaoBloqueada },
+        modifier = Modifier.padding(horizontal = 8.dp).size(44.dp).background(Roxo, CircleShape)
+    ) {
+        Icon(
+            imageVector = if (isProporcaoBloqueada) Icons.Filled.Lock else Icons.Filled.LockOpen,
+            contentDescription = "Trava",
+            tint = Color.White
+        )
+    }
 
-            InputBox("Height (px)", alturaStr, Laranja, !isWidthActive) { isWidthActive = false }
-        }
+        InputBox("Height (px)", alturaStr, Laranja, !isWidthActive, modifier = Modifier.weight(1f)) { isWidthActive = false }
+    }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -443,10 +443,9 @@ fun TelaRedimensionar(imagemOriginal: Bitmap?, onVoltar: () -> Unit, onChangeIma
 }
 
 @Composable
-fun InputBox(label: String, value: String, color: Color, isActive: Boolean, onClick: () -> Unit) {
+fun InputBox(label: String, value: String, color: Color, isActive: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Box(
-        modifier = Modifier
-            .weight(1f)
+        modifier = modifier // <-- AQUI ESTÁ A CORREÇÃO (usando o modifier que vem de fora)
             .clip(RoundedCornerShape(12.dp))
             .border(if (isActive) 2.dp else 1.dp, if (isActive) color else Color(0xFF333333), RoundedCornerShape(12.dp))
             .background(if (isActive) CardEscuro else Color.Transparent)
@@ -461,7 +460,7 @@ fun InputBox(label: String, value: String, color: Color, isActive: Boolean, onCl
                 fontSize = 22.sp, 
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis // Impede que o texto quebre o layout
+                overflow = TextOverflow.Ellipsis 
             )
         }
     }
