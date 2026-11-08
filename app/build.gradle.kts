@@ -30,14 +30,12 @@ android {
     buildFeatures {
         compose = true
     }
-    // ADICIONADO AQUI: A versão compatível com o Kotlin 1.9.22
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
     }
 }
 
 dependencies {
-    implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -45,4 +43,6 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.material3:material3")
+    // ESTA É A LINHA MÁGICA QUE RESOLVE OS ÍCONES:
+    implementation("androidx.compose.material:material-icons-extended")
 }
