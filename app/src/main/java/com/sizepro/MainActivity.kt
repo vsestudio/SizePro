@@ -1,5 +1,9 @@
 package com.sizepro
 
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.material.icons.filled.Backspace
+import androidx.compose.material.icons.filled.SwapHoriz
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
